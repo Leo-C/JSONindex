@@ -38,8 +38,8 @@ and return an index of sub-objects or sub-array relative to minified JSON produc
 
 Index is a dictionary with following structure:
 ```
-index = {"prefix#1" -> {"start": pos_start_#1, "end": pos_end_#1}, 
-        {"prefix#2" -> {"start": pos_start_#2, "end": pos_end_#2}, 
+index = {"prefix#1" -> (pos_start_#1, pos_end_#1), 
+         "prefix#2" -> (pos_start_#2, pos_end_#2), 
 		 ... }
 ```
 with:

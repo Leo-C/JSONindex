@@ -166,7 +166,7 @@ def buildJSONindex(fd_in, fd_out, static_prefixes = [], regexp_prefixes = []):
     Dict
         pos_start and pos_end positions associated to indexed prefixes
         (prefix used by ijson lib), in form:
-        {"prefix" -> {"start": pos_start, "end": pos_end}, ... }
+        {"prefix" -> (pos_start, pos_end), ... }
     """
     
     #position pointer
@@ -201,7 +201,7 @@ def buildJSONindex(fd_in, fd_out, static_prefixes = [], regexp_prefixes = []):
             tag = stack.pop()
             p += 1
             if ((prefix in set_pre) or match_prefix(prefix, set_re)):
-                index[prefix] = {"start": tag[1], "end": p}
+                index[prefix] = (tag[1], p)
         elif event == 'start_array':
             fd_out.write(b'[')
             stack.append('val') # an array is a value
@@ -212,7 +212,7 @@ def buildJSONindex(fd_in, fd_out, static_prefixes = [], regexp_prefixes = []):
             tag = stack.pop()
             p += 1
             if ((prefix in set_pre) or match_prefix(prefix, set_re)):
-                index[prefix] = {"start": tag[1], "end": p}
+                index[prefix] = (tag[1], p)
         elif event == 'map_key':
             val = bytes(value, "UTF-8")
             fd_out.write(b'"')

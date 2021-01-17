@@ -107,7 +107,7 @@ class TestJSONindex(unittest.TestCase):
         _out = io.BytesIO()
         idx = [""]
         index = buildJSONindex(_in, _out, idx)
-        self.assertDictEqual(index, {"": {"start": 0, "end": 2}})
+        self.assertDictEqual(index, {"": (0, 2)})
         self.assertEqual(b"{}", _out.getvalue())
     
     def test_sub_json(self):
@@ -119,8 +119,8 @@ class TestJSONindex(unittest.TestCase):
         json_in = json.load(self._in)
         
         #load a sub-JSON
-        start = index["geometry.coordinates"]["start"]
-        end = index["geometry.coordinates"]["end"]
+        start = index["geometry.coordinates"][0]
+        end = index["geometry.coordinates"][1]
         self._out = open("test_out.json", "rb")
         sub_stream = SubStream(self._out, start, end)
         sub_json = json.load(sub_stream)
@@ -146,13 +146,13 @@ class TestJSONindex(unittest.TestCase):
         self.reset()
         idx = ["geometry.coordinates"]
         index = buildJSONindex(self._in, self._out, idx)
-        self.assertDictEqual(index, {"geometry.coordinates": {"start": 216, "end": 431}})
+        self.assertDictEqual(index, {"geometry.coordinates": (216, 431)})
     
     def test_build_index_regexp(self):
         self.reset()
         re_idx = ["geometry\.[^\.]+"] #match only 'geometry.coordinates' and not 'geometry.item*'
         index = buildJSONindex(self._in, self._out, regexp_prefixes = re_idx)
-        self.assertDictEqual(index, {"geometry.coordinates": {"start": 216, "end": 431}})
+        self.assertDictEqual(index, {"geometry.coordinates": (216, 431)})
     
     def tearDown(self):
         if (self._in != None):
